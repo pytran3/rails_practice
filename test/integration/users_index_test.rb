@@ -12,7 +12,7 @@ class UsersIndexTest < ActionDispatch::IntegrationTest
     get users_path
     assert_template 'users/index'
     assert_select 'div.pagination', 2
-    User.paginate(page: 1).each do |user|
+    User.paginate(page: 1).select {|u| u.activated?}.each do |user|
       assert_select 'a[href=?]', user_path(user), text: user.name
     end
   end
@@ -22,7 +22,7 @@ class UsersIndexTest < ActionDispatch::IntegrationTest
     get users_path
     assert_template 'users/index'
     assert_select 'div.pagination'
-    first_page_of_users = User.paginate(page: 1)
+    first_page_of_users = User.paginate(page: 1).select {|u| u.activated?}
     first_page_of_users.each do |user|
       assert_select 'a[href=?]', user_path(user), text: user.name
       unless user == @admin
@@ -38,5 +38,17 @@ class UsersIndexTest < ActionDispatch::IntegrationTest
     log_in_as(@non_admin)
     get users_path
     assert_select 'a', text: 'delete', count: 0
+  end
+
+  test "index with unactivated user" do
+    log_in_as(@non_admin)
+    get users_path
+    assert_template 'users/index'
+    assert_select 'div.pagination'
+    first_page_of_users = User.paginate(page: 1).select {|u| !u.activated?}
+    assert first_page_of_users.length > 0
+    first_page_of_users.each do |user|
+      assert_select 'a[href=?]', user_path(user), 0
+    end
   end
 end

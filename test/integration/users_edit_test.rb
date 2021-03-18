@@ -5,6 +5,7 @@ class UsersEditTest < ActionDispatch::IntegrationTest
   def setup
     @user = users(:michael)
     @other_user = users(:archer)
+    @unactivated_user = users(:malory)
   end
 
   test "unsuccessful edit" do
@@ -64,6 +65,12 @@ class UsersEditTest < ActionDispatch::IntegrationTest
     patch user_path(@user), params: { user: { name: @user.name,
                                               email: @user.email } }
     assert flash.empty?
+    assert_redirected_to root_url
+  end
+
+  test "should redirect edit when logged in as unactivated user" do
+    log_in_as(@user)
+    get edit_user_path(@unactivated_user)
     assert_redirected_to root_url
   end
 
