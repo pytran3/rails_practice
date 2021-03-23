@@ -39,7 +39,7 @@ class MicropostsInterfaceTest < ActionDispatch::IntegrationTest
     get root_path
     assert_match "34 microposts", response.body
     # まだマイクロポストを投稿していないユーザー
-    other_user = users(:malory)
+    other_user = users(:lana)
     log_in_as(other_user)
     get root_path
     assert_match "0 microposts", response.body
@@ -47,4 +47,5 @@ class MicropostsInterfaceTest < ActionDispatch::IntegrationTest
     get root_path
     assert_match "1 micropost", response.body
   end
+
 end
