@@ -1,0 +1,28 @@
+one:
+  follower: michael
+  followed: lana
+
+two:
+  follower: michael
+  followed: malory
+
+three:
+  follower: lana
+  followed: michael
+
+four:
+  follower: archer
+  followed: michael
+
+
+<% 20.times do |n| %>
+relationship_<%= n %>:
+  follower: michael
+  followed: user_<%= n %>
+<% end %>
+
+<% 10.times do |n| %>
+relationship_<%= n+20 %>:
+  follower: user_<%= n %>
+  followed: michael
+<% end %>

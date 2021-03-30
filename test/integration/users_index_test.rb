@@ -12,6 +12,8 @@ class UsersIndexTest < ActionDispatch::IntegrationTest
     get users_path
     assert_template 'users/index'
     assert_select 'div.pagination', 2
+    assert_match @non_admin.following.count.to_s, response.body
+    assert_match @non_admin.followers.count.to_s, response.body
     User.paginate(page: 1).select {|u| u.activated?}.each do |user|
       assert_select 'a[href=?]', user_path(user), text: user.name
     end
