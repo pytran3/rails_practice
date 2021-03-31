@@ -5,7 +5,7 @@ class FollowingTest < ActionDispatch::IntegrationTest
     @user = users(:michael)
     @other = users(:archer)
     log_in_as(@user)
-  endß
+  end
   test "following page" do
     get following_user_path(@user)
     assert_not @user.following.empty?
